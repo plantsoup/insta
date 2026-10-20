@@ -1,20 +1,22 @@
 /* memento_mori/static/css/style.css */
-/* Authentic Instagram Design System */
+/* Authentic Instagram Dark Mode Design System */
 
 :root {
-  --ig-primary-bg: #ffffff;
-  --ig-secondary-bg: #fafafa;
-  --ig-elevated-bg: #ffffff;
-  --ig-primary-text: #262626;
-  --ig-secondary-text: #737373;
-  --ig-tertiary-text: #8e8e8e;
-  --ig-border: #dbdbdb;
-  --ig-border-subtle: #efefef;
+  --ig-primary-bg: #000000;
+  --ig-secondary-bg: #121212;
+  --ig-elevated-bg: #181818;
+  --ig-modal-bg: #000000;
+  --ig-primary-text: #f5f5f5;
+  --ig-secondary-text: #a8a8a8;
+  --ig-tertiary-text: #737373;
+  --ig-border: #262626;
+  --ig-border-subtle: #1e1e1e;
   --ig-link: #0095f6;
-  --ig-link-hover: #1877f2;
-  --ig-badge-bg: #efefef;
-  --ig-overlay: rgba(0, 0, 0, 0.35);
-  --ig-modal-backdrop: rgba(0, 0, 0, 0.85);
+  --ig-link-hover: #3897f0;
+  --ig-badge-bg: #262626;
+  --ig-badge-border: #363636;
+  --ig-overlay: rgba(0, 0, 0, 0.55);
+  --ig-modal-backdrop: rgba(0, 0, 0, 0.92);
   --header-height: 60px;
   --max-content-width: 935px;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -36,7 +38,7 @@ body {
 }
 
 /* ==========================================================================
-   TOP HEADER
+   TOP HEADER (DARK)
    ========================================================================== */
 
 header.ig-header {
@@ -45,9 +47,9 @@ header.ig-header {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--ig-border);
   display: flex;
   align-items: center;
@@ -64,17 +66,12 @@ header.ig-header {
   align-items: center;
 }
 
-.brand-link {
+.brand-container {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  text-decoration: none;
   color: var(--ig-primary-text);
-  transition: opacity 0.2s ease;
-}
-
-.brand-link:hover {
-  opacity: 0.8;
+  user-select: none;
 }
 
 .ig-logo-glyph {
@@ -85,9 +82,9 @@ header.ig-header {
 }
 
 .brand-name {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   color: var(--ig-primary-text);
 }
 
@@ -103,6 +100,7 @@ header.ig-header {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background-color: var(--ig-badge-bg);
+  border: 1px solid var(--ig-badge-border);
   color: var(--ig-secondary-text);
   padding: 3px 8px;
   border-radius: 12px;
@@ -115,7 +113,7 @@ header.ig-header {
 }
 
 /* ==========================================================================
-   MAIN CONTAINER & PROFILE HEADER
+   MAIN CONTAINER & PROFILE HEADER (DARK)
    ========================================================================== */
 
 main {
@@ -167,13 +165,18 @@ main {
   padding: 2px;
 }
 
+.story-ring.active-stories {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  padding: 3px;
+}
+
 .profile-avatar {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #fff;
-  border: 3px solid #fff;
+  background-color: #121212;
+  border: 3px solid #000000;
   display: block;
 }
 
@@ -200,6 +203,7 @@ main {
 
 .profile-badge {
   background-color: var(--ig-badge-bg);
+  border: 1px solid var(--ig-badge-border);
   color: var(--ig-primary-text);
   font-size: 13px;
   font-weight: 600;
@@ -212,7 +216,7 @@ main {
   gap: 36px;
   margin-bottom: 20px;
   font-size: 16px;
-  color: var(--ig-primary-text);
+  color: var(--ig-secondary-text);
 }
 
 .stat {
@@ -257,17 +261,18 @@ main {
 }
 
 .website a {
-  color: #00376b;
+  color: var(--ig-link);
   text-decoration: none;
   font-weight: 600;
 }
 
 .website a:hover {
   text-decoration: underline;
+  color: var(--ig-link-hover);
 }
 
 /* ==========================================================================
-   INSTAGRAM PROFILE TABS (POSTS / STORIES)
+   INSTAGRAM PROFILE TABS (DARK)
    ========================================================================== */
 
 .profile-tabs {
@@ -283,7 +288,7 @@ main {
   align-items: center;
   gap: 6px;
   height: 52px;
-  color: var(--ig-secondary-text);
+  color: var(--ig-tertiary-text);
   text-decoration: none;
   font-size: 12px;
   font-weight: 600;
@@ -296,12 +301,12 @@ main {
 }
 
 .tab-item:hover {
-  color: var(--ig-primary-text);
+  color: var(--ig-secondary-text);
 }
 
 .tab-item.active {
-  color: var(--ig-primary-text);
-  border-top: 1px solid var(--ig-primary-text);
+  color: #ffffff;
+  border-top: 1px solid #ffffff;
 }
 
 .tab-icon {
@@ -310,7 +315,7 @@ main {
 }
 
 /* ==========================================================================
-   SORTING / FILTER CHIPS
+   SORTING / FILTER CHIPS (DARK)
    ========================================================================== */
 
 .sort-options {
@@ -331,7 +336,7 @@ main {
   display: inline-flex;
   align-items: center;
   background-color: var(--ig-secondary-bg);
-  border: 1px solid var(--ig-border-subtle);
+  border: 1px solid var(--ig-border);
   color: var(--ig-secondary-text);
   text-decoration: none;
   padding: 6px 14px;
@@ -343,19 +348,20 @@ main {
 }
 
 .sort-link:hover {
-  background-color: var(--ig-border);
+  background-color: var(--ig-badge-bg);
+  border-color: var(--ig-badge-border);
   color: var(--ig-primary-text);
 }
 
 .sort-link.active {
-  background-color: var(--ig-primary-text);
-  border-color: var(--ig-primary-text);
-  color: #ffffff;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
   font-weight: 600;
 }
 
 /* ==========================================================================
-   POSTS GRID
+   POSTS GRID (DARK)
    ========================================================================== */
 
 .posts-grid {
@@ -368,7 +374,7 @@ main {
   position: relative;
   aspect-ratio: 1 / 1;
   width: 100%;
-  background-color: #efefef;
+  background-color: #121212;
   overflow: hidden;
   cursor: pointer;
   user-select: none;
@@ -398,7 +404,7 @@ main {
   right: 10px;
   color: #ffffff;
   z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -442,7 +448,7 @@ main {
 }
 
 /* ==========================================================================
-   POST MODAL (INSTAGRAM DESKTOP VIEWER)
+   POST MODAL (INSTAGRAM DARK VIEWER)
    ========================================================================== */
 
 .post-modal {
@@ -451,8 +457,8 @@ main {
   inset: 0;
   background-color: var(--ig-modal-backdrop);
   z-index: 2000;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   overflow-y: auto;
 }
 
@@ -488,7 +494,8 @@ main {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -497,7 +504,7 @@ main {
 }
 
 .modal-nav:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-50%) scale(1.08);
 }
 
@@ -514,12 +521,13 @@ main {
   max-width: 1100px;
   width: 90%;
   margin: 40px auto;
-  background-color: var(--ig-elevated-bg);
+  background-color: var(--ig-modal-bg);
+  border: 1px solid var(--ig-border);
   height: calc(100vh - 80px);
   max-height: 850px;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
 }
 
 .post-media {
@@ -572,22 +580,23 @@ main {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.85);
-  color: #000;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   font-size: 16px;
   user-select: none;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.15s;
 }
 
 .slideshow-nav:hover {
   transform: translateY(-50%) scale(1.1);
-  background-color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .slideshow-prev {
@@ -612,7 +621,7 @@ main {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
 }
@@ -622,7 +631,7 @@ main {
   transform: scale(1.25);
 }
 
-/* Post Info Column (Right Sidebar) */
+/* Post Info Column (Right Sidebar in Dark) */
 .post-info {
   flex: 1;
   width: 400px;
@@ -630,7 +639,7 @@ main {
   border-left: 1px solid var(--ig-border);
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: var(--ig-modal-bg);
 }
 
 .post-header {
@@ -647,7 +656,7 @@ main {
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #eee;
+  background-color: #262626;
   flex-shrink: 0;
 }
 
@@ -710,7 +719,7 @@ main {
 }
 
 .ig-hashtag, .ig-mention {
-  color: #00376b;
+  color: var(--ig-link);
   font-weight: 500;
 }
 
@@ -719,7 +728,7 @@ main {
   border-top: 1px solid var(--ig-border);
   padding: 12px 16px;
   flex-shrink: 0;
-  background-color: #ffffff;
+  background-color: var(--ig-modal-bg);
 }
 
 .post-actions {
@@ -756,6 +765,7 @@ main {
 
 .post-stat strong {
   font-weight: 600;
+  color: #ffffff;
 }
 
 .post-date {
@@ -766,14 +776,93 @@ main {
 }
 
 /* ==========================================================================
-   STORIES PAGE & STORY VIEWER
+   STORIES PAGE & STORY VIEWER (DARK)
    ========================================================================== */
+
+.stories-container {
+  margin-top: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0 16px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ig-secondary-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.story-item {
+  position: relative;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--ig-secondary-bg);
+  border: 1px solid var(--ig-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.story-item:hover {
+  transform: translateY(-4px);
+  border-color: #444;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.story-media {
+  position: relative;
+  width: 100%;
+  padding-bottom: 177.78%; /* 16:9 aspect ratio */
+  overflow: hidden;
+}
+
+.story-media img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  color: white;
+  padding: 14px 8px 8px;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.video-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
 
 .story-viewer {
   display: none;
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.94);
+  background-color: rgba(0, 0, 0, 0.96);
   z-index: 2000;
   align-items: center;
   justify-content: center;
@@ -795,6 +884,23 @@ main {
   user-select: none;
 }
 
+.story-pause {
+  position: absolute;
+  top: 20px;
+  right: 70px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 2010;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
 .story-nav {
   position: absolute;
   top: 50%;
@@ -803,7 +909,7 @@ main {
   font-size: 24px;
   cursor: pointer;
   z-index: 2010;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -815,7 +921,7 @@ main {
 }
 
 .story-nav:hover {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .story-prev {
@@ -855,6 +961,7 @@ main {
   border-radius: 8px;
   overflow: hidden;
   background-color: #000;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
 }
 
 .story-media-container {
@@ -880,7 +987,7 @@ main {
   left: 0;
   right: 0;
   padding: 20px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
   color: #ffffff;
   text-align: center;
 }
@@ -891,7 +998,7 @@ main {
 }
 
 /* ==========================================================================
-   FOOTER
+   FOOTER (DARK)
    ========================================================================== */
 
 footer {
@@ -906,7 +1013,7 @@ footer {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN (TABLET & MOBILE)
+   RESPONSIVE DESIGN (TABLET & MOBILE DARK)
    ========================================================================== */
 
 @media (max-width: 768px) {
@@ -915,7 +1022,7 @@ footer {
   }
 
   .brand-name {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .date-text {
@@ -979,6 +1086,7 @@ footer {
     margin: 20px auto 0;
     width: 100%;
     border-radius: 0;
+    border: none;
   }
 
   .post-media {
