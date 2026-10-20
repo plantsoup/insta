@@ -1,6 +1,5 @@
 # memento_mori/loader.py
 import json
-import re
 import os
 from datetime import datetime
 import html

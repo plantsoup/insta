@@ -2,7 +2,6 @@
 import os
 import shutil
 import hashlib
-import base64
 import re
 import mimetypes
 import magic  # python-magic library

@@ -2,143 +2,133 @@
 
 <img align="right" width="300" hspace="20" src="preview.gif" alt="Memento Mori Interface Preview">
 
-**Memento Mori** is a tool that converts your Instagram data export into a beautiful, standalone viewer that resembles the Instagram interface. The name "Memento Mori" (Latin for "remember that you will die") reflects the ephemeral nature of our digital content. You can see an example at https://gregr.org/instagram/.
+**Memento Mori** is a tool that converts your Instagram data export into a beautiful, standalone viewer that resembles the Instagram interface. The name "Memento Mori" (Latin for "remember that you will die") reflects the ephemeral nature of our digital content.
 
 If you find a bug that you're able to fix please create a pull request, otherwise [create an issue with helpful info](#troubleshooting--reporting-issues).
 
 ## Quick Start
-Get your Instagram data export as a JSON-format zip, throw it in with this code, and run this command:
+Get your Instagram data export as a JSON-format zip, place it in this directory, and run:
 ```bash
 docker compose run --rm memento-mori
-#Then open output/index.html in your browser
 ```
+Then open `output/index.html` in your browser.
 
 ## ⚠️ IMPORTANT SECURITY WARNING ⚠️
 
-**DO NOT** share your raw Instagram export online! It contains sensitive data you probably don't want to share:
+**DO NOT** share your raw Instagram export online! It contains sensitive personal data:
 
 - Phone numbers
 - Precise location data
 - Personal messages
 - Email addresses
-- Other private information
+- Other private account data
 
-Only share the generated output folder after processing with this tool.
+Only share the generated `output/` folder after processing with this tool.
 
 ## How It Works
-Memento Mori processes your Instagram data export and generates a static site with your posts and stories, copying all your media files into an organized structure that can be viewed offline or hosted on your own website.
+Memento Mori processes your Instagram data export and generates a fast, standalone static website with your posts and stories, converting media into optimized formats and organizing everything into a structure that can be viewed offline or hosted on any web server.
 
 ## Key Features
-- **Familiar Interface**: Grid layout with post details and carousel for multiple images
-- **Stories Support**: View your Instagram Stories with auto-progression and 9:16 aspect ratio display
-- **Media Optimization**: Converts images to WebP, generates thumbnails, and supports video playback
-- **Organization**: Sorts posts by various criteria with shareable links to specific content
-- **Profile Information**: Displays bio, website, and follower count from your Instagram profile
-- **Technical Improvements**:
-  - Fixes encoding issues and mislabeled file formats
-  - Shortens filenames for smaller HTML size
-  - Processes files in parallel with a responsive design that works on all devices
-  - Robust error handling with verbose debugging option
+- **Familiar Interface**: Grid layout with dark mode aesthetic, post detail modal, and swipeable carousel for multi-media posts
+- **Stories Support**: View your Instagram Stories with auto-progression, indicators, and 9:16 aspect ratio display
+- **Media Optimization**: Automatically converts images to WebP, extracts video frame thumbnails, and preserves playback
+- **Sorting & Filtering**: Sort posts by newest, oldest, multi-photo, videos only, photos only, random, or engagement metrics (likes, comments, views)
+- **Profile Information**: Displays bio, links, and follower count from your Instagram export
+- **Standalone Static Output**: Zero backend required for serving—host on GitHub Pages, Cloudflare Pages, S3, Traefik, or browse locally
+- **Parallel Processing**: Multi-threaded media conversion with configurable quality and resolution limits
 
 ## How to Use Memento Mori
 
-### 1. Get Your Instagram Data
-1. Request and download your Instagram data archive
-2. Place the zip within the folder of this repo
+### 1. Request Your Instagram Data
+1. In the Instagram app or website, go to **Settings > Accounts Center > Your information and permissions > Download your information**.
+2. Request a download in **JSON** format (HTML format is not supported).
+3. Place the downloaded ZIP file directly into the project folder.
 
 ### 2. Preferred Method: Using Docker (Easiest)
-Docker Compose is the easiest way to run Memento Mori without installing any dependencies. Many thanks to [CarsonDavis](https://github.com/CarsonDavis) for building out all the dockerizing code (as well as generally making my code better):
-```bash
-# Build the Docker image
-docker compose build
 
-# Run with default settings
+Memento Mori is available as a pre-built multi-arch Docker image on Docker Hub (`plantsoup/insta:latest`).
+
+```bash
+# Run with Docker Compose (auto-detects zip in workspace and writes to ./output)
 docker compose run --rm memento-mori
 
-# Run with specific arguments
+# Or run directly with Docker CLI
+docker run --rm \
+  -v "$(pwd):/app/workspace" \
+  -v "$(pwd)/output:/app/output" \
+  plantsoup/insta:latest
+
+# Run with custom arguments
 docker compose run --rm memento-mori --output /app/output/my-site --quality 90
 
-# Add Google Analytics tracking
+# Add Google Analytics tracking to output
 docker compose run --rm memento-mori --gtag-id G-DX1ZWTC9NZ
 
-# Serve the output folder locally to preview in your browser
+# Rebuild locally if making source modifications
+docker compose build
+```
+
+Preview the generated site in your browser:
+```bash
 python3 -m http.server -d output
 ```
 
-By default, Docker will:
-- Search for exports in the project directory
-- Output the generated site to the './output' directory
-
 ### 3. Alternative Method: Direct Python Installation
-If you prefer running the tool directly without Docker:
-```bash
-# Install package and dependencies
-pip install -e .
 
-# Or install dependencies manually
-pip install ftfy==6.3.1 Jinja2==3.0.3 MarkupSafe==2.1.5 opencv_python==4.10.0.84 Pillow==11.1.0 tqdm==4.67.1 python_magic==0.4.27
+If you prefer running natively without Docker:
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+# Or install in editable mode
+pip install -e .
 
 # Run the CLI
 python -m memento_mori.cli
 
-# Serve the output folder locally to preview in your browser
+# Preview the site locally
 python3 -m http.server -d output
 ```
 
 ### CLI Arguments
-The CLI supports the following arguments:
+
 ```
 Options:
---input PATH Path to data (ZIP or folder). If not specified, auto-detection will be used.
---output PATH Output directory for generated website [default: ./output]
---threads INTEGER Number of parallel processing threads [default: core count - 1]
---search-dir PATH Directory to search for exports when auto-detecting [default: current directory]
---quality INTEGER WebP conversion quality (1-100) [default: 70]
---max-dimension INTEGER Maximum dimension for images in pixels [default: 1920]
---thumbnail-size WxH Size of thumbnails [default: 292x292]
---no-auto-detect Disable auto-detection (requires --input to be specified)
---gtag-id ID     Google Analytics tag ID (e.g., 'G-DX1ZWTC9NZ') to add tracking to the generated site
---verbose, -v    Enable verbose output for debugging
+  --input PATH             Path to Instagram data (ZIP or folder). If not specified, auto-detection will be used.
+  --output PATH            Output directory for generated website [default: ./output]
+  --threads INTEGER        Number of parallel processing threads [default: CPU core count - 1]
+  --search-dir PATH        Directory to search for exports when auto-detecting [default: current directory]
+  --quality INTEGER        WebP conversion quality from 1 to 100 [default: 70]
+  --max-dimension INTEGER  Maximum dimension for images in pixels [default: 1920]
+  --thumbnail-size WxH     Size of thumbnails [default: 292x292]
+  --no-auto-detect         Disable auto-detection (requires --input to be specified)
+  --gtag-id ID             Google Analytics tag ID (e.g., 'G-XXXXXXXXXX') to inject tracking
+  --verbose, -v            Enable verbose output for debugging
 ```
 
-Note: Auto-detection is enabled by default and will look for exports in the current directory. Use `--no-auto-detect` if you want to disable this feature and specify an input path manually.
-
 ### Example Commands
+
 ```bash
 # Auto-detect export in current directory
 python -m memento_mori.cli
 
-# Specify input file/folder and output directory
+# Specify an explicit input archive and custom output directory
 python -m memento_mori.cli --input path/to/export.zip --output my-site
 
-# Use specific number of threads and image quality
-python -m memento_mori.cli --threads 8 --quality 90
+# Optimize conversion with custom threads and quality
+python -m memento_mori.cli --threads 8 --quality 85 --max-dimension 1600
 
-# Specify search directory for auto-detection
+# Specify custom search directory
 python -m memento_mori.cli --search-dir ~/Downloads
 
-# Use custom thumbnail size
-python -m memento_mori.cli --thumbnail-size 400x400
-
-# Specify maximum image dimension
-python -m memento_mori.cli --max-dimension 1600
-
-# Disable auto-detection (requires specifying input)
-python -m memento_mori.cli --no-auto-detect --input path/to/export.zip
-
-# Add Google Analytics tracking
-python -m memento_mori.cli --gtag-id G-DX1ZWTC9NZ
-
-# Enable verbose debugging output
+# Run in verbose mode for troubleshooting
 python -m memento_mori.cli --verbose
 ```
 
 ## Viewing Your Generated Site
-After the tool finishes processing your Instagram data:
-1. The website will be generated in the output directory (default: ./output)
-2. Open the `index.html` file in this directory with your web browser to view your Instagram archive
-3. Click on "stories" in your profile stats to view your Stories archive
-4. You can also upload the entire output directory to a web hosting service to share it online
+1. Once processing finishes, open `output/index.html` in your web browser.
+2. Click on the profile photo or "Stories" tab to launch the interactive Stories viewer.
+3. You can upload the entire `output/` directory to any static hosting provider (e.g., Cloudflare Pages, Netlify, GitHub Pages, Nginx, Traefik).
 
 ## Troubleshooting & Reporting Issues
 If you encounter an error:
@@ -150,26 +140,11 @@ If you encounter an error:
    python -m memento_mori.cli -v
    ```
 
-2. When [opening a GitHub issue](https://github.com/greg-randall/memento-mori/issues), please include:
+2. When [opening a GitHub issue](https://github.com/plantsoup/insta/issues), please include:
    - The full error message and traceback from the `-v` output
-   - Your Instagram export format (must be **JSON**, not HTML — this tool does not support HTML exports)
-   - Whether you're using Docker or running Python directly
-   - Any other relevant details (e.g., if you have multiple export ZIPs)
-
-The verbose output helps us understand what's happening with your specific archive and will speed up debugging.
-
-## PHP Version (Alternative)
-For those who prefer the deprecated PHP implementation, there are a few notes in the deprecated_php_utility folder, but basically extract your data into the folder with the php file, and run
-```bash
-# Run from command line
-php index.php
-```
+   - Confirming your export was requested in **JSON** format (HTML exports are not supported)
+   - Whether you ran via Docker or direct Python
+   - Any specifics regarding archive structure
 
 ## Why This Exists
-When requesting your data from Instagram, the export you receive contains your content but in a format that's intentionally difficult to navigate and enjoy. Memento Mori solves this problem by transforming your archive into an intuitive, familiar interface that brings your memories back to life.
-
-Instagram, like many social platforms, has undergone significant "enshittification" - a term coined to describe how platforms evolve:
-
-1. First, they attract users with a quality experience
-2. Then, they leverage their position to extract data and attention
-3. Finally, they degrade the user experience to maximize profit
+When requesting your data from Instagram, the export you receive contains your content in raw JSON structures and unstructured folders that are difficult to browse. Memento Mori transforms your export into an intuitive, familiar viewer that preserves your photos, videos, and stories.

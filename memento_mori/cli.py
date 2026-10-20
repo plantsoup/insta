@@ -1,6 +1,5 @@
 # memento_mori/cli.py
 
-import os
 import argparse
 import multiprocessing
 from pathlib import Path

@@ -26,5 +26,5 @@ packages = ["memento_mori"]
 memento-mori = "memento_mori.cli:main"
 
 [project.urls]
-"Homepage" = "https://github.com/greg-randall/memento-mori"
-"Bug Tracker" = "https://github.com/greg-randall/memento-mori/issues"
+"Homepage" = "https://github.com/plantsoup/insta"
+"Bug Tracker" = "https://github.com/plantsoup/insta/issues"

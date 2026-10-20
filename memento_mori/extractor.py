@@ -237,7 +237,7 @@ class InstagramArchiveExtractor:
         lines.append("")
         lines.append(f"({json_count} .json file(s), {html_count} .html file(s) total in archive)")
         lines.append(
-            "Please open an issue at https://github.com/greg-randall/memento-mori/issues "
+            "Please open an issue at https://github.com/plantsoup/insta/issues "
             "including this output."
         )
         return "\n".join(lines)
