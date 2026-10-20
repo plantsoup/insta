@@ -119,14 +119,14 @@
   <body>
     <header class="ig-header">
       <div class="header-content">
-        <a href="index.html" class="brand-link" title="Gavin Spear">
+        <div class="brand-container" title="{{ name }}">
           <svg class="ig-logo-glyph" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
           </svg>
-          <span class="brand-name">Gavin Spear</span>
-        </a>
+          <span class="brand-name">{{ name }}</span>
+        </div>
         <div class="date-range-header" id="date-range-header">
           <span class="archive-pill">Archive</span>
           <span class="date-text">{{ date_range }}</span>
