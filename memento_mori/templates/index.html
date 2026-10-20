@@ -40,19 +40,9 @@
           </svg>
           <span class="brand-name">{{ name }}</span>
         </div>
-        <div class="header-actions">
-          <button type="button" class="header-add-btn" id="openCreatePostBtn" title="Add Photo / New Post" aria-label="Add Photo">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
-              <line x1="12" y1="8" x2="12" y2="16"></line>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
-            </svg>
-            <span class="add-btn-text">Add Photo</span>
-          </button>
-          <div class="date-range-header" id="date-range-header">
-            <span class="archive-pill">Archive</span>
-            <span class="date-text">{{ date_range }}</span>
-          </div>
+        <div class="date-range-header" id="date-range-header">
+          <span class="archive-pill">Archive</span>
+          <span class="date-text">{{ date_range }}</span>
         </div>
       </div>
     </header>
@@ -76,18 +66,18 @@
           </div>
           <div class="stats">
             <div class="stat">
-              <span class="stat-count" id="post-count">{{ post_count }}</span> <span class="stat-label">posts</span>
+              <span class="stat-count" id="post-count">{{ post_count }}</span> posts
             </div>
             {% if has_stories %}
             <div class="stat">
               <a href="stories.html" class="stat-link">
-                <span class="stat-count" id="story-count">{{ story_count }}</span> <span class="stat-label">stories</span>
+                <span class="stat-count" id="story-count">{{ story_count }}</span> stories
               </a>
             </div>
             {% endif %}
             {% if profile.follower_count is defined and profile.follower_count is not none %}
             <div class="stat">
-              <span class="stat-count" id="follower-count">{{ profile.follower_count }}</span> <span class="stat-label">followers</span>
+              <span class="stat-count" id="follower-count">{{ profile.follower_count }}</span> followers
             </div>
             {% endif %}
           </div>
@@ -125,7 +115,7 @@
         {% endif %}
       </nav>
 
-      <div class="sort-options" id="sortOptionsContainer">
+      <div class="sort-options">
         <div class="sort-row">
           <a href="#" class="sort-link active" data-sort="newest">Newest</a>
           <a href="#" class="sort-link" data-sort="oldest">Oldest</a>
@@ -152,15 +142,6 @@
 
     <!-- Modal for post details -->
     <div class="post-modal" id="postModal">
-        <div class="modal-mobile-top-bar">
-          <button type="button" class="modal-mobile-btn" id="mobileModalBackBtn" aria-label="Back">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <span class="modal-mobile-title">Post</span>
-          <button type="button" class="modal-mobile-btn" id="mobileModalOptionsBtn" aria-label="Options">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><circle cx="12" cy="12" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle></svg>
-          </button>
-        </div>
         <div class="close-modal" id="closeModal">✕</div>
         <div class="modal-nav modal-prev" id="modalPrev">❮</div>
         <div class="modal-nav modal-next" id="modalNext">❯</div>
@@ -175,9 +156,6 @@
                       <div class="post-username" id="postUsername">{{ username }}</div>
                       <div class="post-user-name">{{ name }}</div>
                     </div>
-                    <button type="button" class="post-header-options" id="desktopPostOptionsBtn" aria-label="Options">
-                      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><circle cx="12" cy="12" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="12" r="2"></circle></svg>
-                    </button>
                 </div>
                 <div class="post-body">
                   <div class="post-caption-row">
@@ -193,11 +171,11 @@
                 <div class="post-footer">
                   <div class="post-actions">
                     <div class="action-buttons-left">
-                      <svg class="action-btn action-like" id="likeActionBtn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                      <svg class="action-btn action-comment" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                      <svg class="action-btn action-share" id="shareActionBtn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                      <svg class="action-btn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                      <svg class="action-btn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                      <svg class="action-btn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                     </div>
-                    <svg class="action-btn action-save" id="saveActionBtn" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    <svg class="action-btn action-save" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </div>
                   <div class="post-stats" id="postStats"></div>
                   <div class="post-date" id="postDate"></div>
@@ -205,151 +183,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Post Options Action Sheet -->
-    <div class="action-sheet-backdrop" id="postOptionsSheet" style="display: none;">
-      <div class="action-sheet-card">
-        <button type="button" class="action-sheet-item danger-item" id="deletePostBtn" style="display: none;">Delete Post</button>
-        <button type="button" class="action-sheet-item" id="downloadMediaBtn">Download Photo</button>
-        <button type="button" class="action-sheet-item" id="copyPostLinkBtn">Copy Link</button>
-        <button type="button" class="action-sheet-item cancel-item" id="closeOptionsSheetBtn">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Modal for Adding Photos / Creating Post -->
-    <div class="create-post-modal" id="createPostModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
-      <div class="create-modal-backdrop" id="createModalBackdrop"></div>
-      <div class="create-modal-dialog">
-        <div class="create-modal-header">
-          <button type="button" class="create-cancel-btn" id="createCancelBtn">Cancel</button>
-          <h2 class="create-modal-title" id="createModalTitle">New Post</h2>
-          <button type="button" class="create-share-btn" id="createShareBtn" disabled>Share</button>
-        </div>
-
-        <div class="create-modal-body">
-          <!-- Step 1: Upload / Dropzone -->
-          <div class="create-upload-zone" id="createUploadZone">
-            <div class="upload-icon-container">
-              <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="4" ry="4"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-            </div>
-            <p class="upload-prompt-title">Add photos to your archive</p>
-            <p class="upload-prompt-subtitle">Choose from your library or take a photo with your mobile camera</p>
-            <div class="upload-button-group">
-              <label for="createFileInput" class="upload-action-btn primary-upload-btn">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                <span>Select Photos</span>
-              </label>
-              <label for="createCameraInput" class="upload-action-btn camera-upload-btn">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                <span>Take Photo</span>
-              </label>
-            </div>
-            <input type="file" id="createFileInput" accept="image/*,video/*" multiple style="display: none;">
-            <input type="file" id="createCameraInput" accept="image/*" capture="environment" style="display: none;">
-          </div>
-
-          <!-- Step 2: Preview & Editing (shown once photos chosen) -->
-          <div class="create-editor-zone" id="createEditorZone" style="display: none;">
-            <div class="editor-media-preview-container">
-              <div class="editor-media-viewport" id="editorMediaViewport"></div>
-              <div class="editor-slide-nav" id="editorSlideNav" style="display: none;">
-                <button type="button" class="editor-nav-btn prev" id="editorPrevBtn">❮</button>
-                <button type="button" class="editor-nav-btn next" id="editorNextBtn">❯</button>
-                <div class="editor-indicators" id="editorIndicators"></div>
-              </div>
-              <div class="editor-thumbs-container">
-                <div class="editor-thumbs-strip" id="editorThumbsStrip"></div>
-                <label for="createAddMoreInput" class="editor-add-more-btn" title="Add another photo">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  <span>Add</span>
-                </label>
-                <input type="file" id="createAddMoreInput" accept="image/*,video/*" multiple style="display: none;">
-              </div>
-            </div>
-
-            <!-- Form Details -->
-            <div class="editor-details-form">
-              <div class="editor-author-row">
-                <img src="{{ profile_picture }}" alt="{{ username }}" class="editor-author-avatar">
-                <span class="editor-author-username">{{ username }}</span>
-              </div>
-
-              <div class="form-group caption-group">
-                <textarea id="createCaptionInput" class="create-caption-textarea" placeholder="Write a caption..." rows="3"></textarea>
-                <div class="caption-tools">
-                  <div class="quick-tags">
-                    <button type="button" class="tag-chip" data-insert="#photography">#photography</button>
-                    <button type="button" class="tag-chip" data-insert="#family">#family</button>
-                    <button type="button" class="tag-chip" data-insert="#memories">#memories</button>
-                    <button type="button" class="tag-chip" data-insert="❤️">❤️</button>
-                    <button type="button" class="tag-chip" data-insert="✨">✨</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group date-group">
-                <label for="createDateInput" class="form-label">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  <span>Post Date</span>
-                </label>
-                <div class="date-input-row">
-                  <input type="datetime-local" id="createDateInput" class="create-date-input">
-                  <button type="button" class="date-now-btn" id="setDateNowBtn">Now</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Bottom Navigation Bar -->
-    <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
-      <a href="index.html" class="mobile-nav-item active" id="navHomeBtn" title="Posts">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
-        <span>Posts</span>
-      </a>
-      {% if has_stories %}
-      <a href="stories.html" class="mobile-nav-item" id="navStoriesBtn" title="Stories">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polygon fill="currentColor" points="10 8 16 12 10 16"></polygon>
-        </svg>
-        <span>Stories</span>
-      </a>
-      {% endif %}
-      <button type="button" class="mobile-nav-item mobile-nav-create" id="navCreateBtn" title="Add Photo" aria-label="Add Photo">
-        <div class="create-icon-wrapper">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
-          </svg>
-        </div>
-        <span>New</span>
-      </button>
-      <button type="button" class="mobile-nav-item" id="navFilterBtn" title="Sort & Filter" aria-label="Filter">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="4" y1="6" x2="20" y2="6"></line>
-          <line x1="8" y1="12" x2="16" y2="12"></line>
-          <line x1="10" y1="18" x2="14" y2="18"></line>
-        </svg>
-        <span>Filter</span>
-      </button>
-      <a href="#username" class="mobile-nav-item mobile-nav-profile" id="navProfileBtn" title="Profile">
-        <img src="{{ profile_picture }}" alt="Profile" class="bottom-nav-avatar">
-        <span>Profile</span>
-      </a>
-    </nav>
-
-    <!-- Toast Notification -->
-    <div class="ig-toast" id="igToast" style="display: none;" role="status" aria-live="polite"></div>
     
     <footer>
       <div class="footer-content">
