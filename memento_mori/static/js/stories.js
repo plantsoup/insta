@@ -436,10 +436,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Click on the story media area to navigate forward
+    // Touch and tap navigation for stories on mobile and desktop
+    let storyTouchStartX = 0;
+    let storyTouchStartY = 0;
+
+    storyViewer.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) {
+            storyTouchStartX = e.touches[0].clientX;
+            storyTouchStartY = e.touches[0].clientY;
+        }
+    }, { passive: true });
+
+    storyViewer.addEventListener('touchend', function(e) {
+        if (e.changedTouches.length === 1) {
+            const deltaX = e.changedTouches[0].clientX - storyTouchStartX;
+            const deltaY = e.changedTouches[0].clientY - storyTouchStartY;
+
+            // Swipe down to close story
+            if (deltaY > 80 && Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+                closeStory();
+                return;
+            }
+
+            // Horizontal swipe
+            if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+                if (deltaX < 0) {
+                    navigateStory(1);
+                } else {
+                    navigateStory(-1);
+                }
+            }
+        }
+    }, { passive: true });
+
+    // Click/tap left 30% for prev, right 70% for next
     storyMedia.addEventListener('click', function(e) {
-        // Only if it's not a video (to avoid interfering with video controls)
-        if (!e.target.matches('video')) {
+        if (e.target.matches('video') && e.target.hasAttribute('controls')) return;
+        const rect = storyMedia.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        if (clickX < rect.width * 0.3) {
+            navigateStory(-1);
+        } else {
             navigateStory(1);
         }
     });
