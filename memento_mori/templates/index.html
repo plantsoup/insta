@@ -16,16 +16,14 @@
       gtag('config', '{{ gtag_id }}');
     </script>
     {% endif %}
-    <!-- Data script tags -->
-    <script id="memento-post-data" type="application/json">{{ post_data_json|safe }}</script>
-    {% if stories_data_json %}
-    <script id="memento-stories-data" type="application/json">{{ stories_data_json|safe }}</script>
-    {% endif %}
+    <!-- Script to make post data available to JavaScript -->
     <script>
-      var postDataEl = document.getElementById('memento-post-data');
-      window.postData = postDataEl ? JSON.parse(postDataEl.textContent || '{}') : {};
-      var storiesDataEl = document.getElementById('memento-stories-data');
-      window.storiesData = storiesDataEl ? JSON.parse(storiesDataEl.textContent || '{}') : {};
+        window.postData = {{ post_data_json|safe }};
+        {% if stories_data_json %}
+        window.storiesData = {{ stories_data_json|safe }};
+        {% else %}
+        window.storiesData = {};
+        {% endif %}
     </script>
     <script src="js/modal.js"></script>
   </head>
