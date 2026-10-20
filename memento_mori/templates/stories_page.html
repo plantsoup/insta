@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memento Mori - {{ username }}'s Instagram Stories</title>
+    <title>Stories • Gavin Spear (@{{ username }}) • Instagram Archive</title>
     <link rel="stylesheet" href="css/style.css">
     {% if gtag_id %}
     <!-- Google tag (gtag.js) -->
@@ -20,7 +20,6 @@
     <script>
         window.storiesData = {{ stories_data_json|safe }};
     </script>
-    <!-- Load stories.js only, modal.js is not needed on this page -->
     <script src="js/stories.js"></script>
     <style>
       /* Make videos full height in story viewer */
@@ -52,28 +51,30 @@
       /* 9:16 aspect ratio for story thumbnails */
       .stories-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 16px;
         margin-top: 20px;
       }
       
       .story-item {
         position: relative;
         cursor: pointer;
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
+        background: #111;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
       }
       
       .story-item:hover {
-        transform: translateY(-5px);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
       }
       
       .story-media {
         position: relative;
         width: 100%;
-        padding-bottom: 177.78%; /* 16:9 aspect ratio (9/16 = 0.5625, 1/0.5625 = 1.7778 or 177.78%) */
+        padding-bottom: 177.78%; /* 16:9 aspect ratio */
         overflow: hidden;
       }
       
@@ -91,44 +92,67 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0,0,0,0.7);
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
         color: white;
-        padding: 5px;
-        font-size: 12px;
+        padding: 12px 8px 8px;
+        font-size: 11px;
         text-align: center;
+        font-weight: 500;
+      }
+      
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0 10px;
+      }
+
+      .section-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #737373;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
     </style>
   </head>
   <body>
-    <header>
+    <header class="ig-header">
       <div class="header-content">
-        <a href="https://github.com/greg-randall/memento-mori" class="logo">Memento Mori</a>
-        <div class="date-range-header" id="date-range-header">{{ date_range }}</div>
+        <a href="index.html" class="brand-link" title="Gavin Spear">
+          <svg class="ig-logo-glyph" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          <span class="brand-name">Gavin Spear</span>
+        </a>
+        <div class="date-range-header" id="date-range-header">
+          <span class="archive-pill">Archive</span>
+          <span class="date-text">{{ date_range }}</span>
+        </div>
       </div>
     </header>
     <main>
       <div class="profile-info">
-        <div class="profile-picture">
-          <img alt="Profile Picture" src="{{ profile_picture }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        <div class="profile-picture-container has-stories">
+          <div class="story-ring active-stories" title="{{ name }}'s Stories">
+            <img alt="{{ name }}" src="{{ profile_picture }}" class="profile-avatar">
+          </div>
         </div>
         <div class="profile-details">
-          <h1 id="username">{{ username }}</h1>
-          {% if bio %}
-          <p class="bio">{{ bio }}</p>
-          {% endif %}
-          {% if profile.website %}
-          <p class="website"><a href="{{ profile.website }}" target="_blank" rel="noopener noreferrer">{{ profile.website }}</a></p>
-          {% endif %}
+          <div class="profile-title-row">
+            <h1 id="username">{{ username }}</h1>
+            <span class="profile-badge">Instagram Archive</span>
+          </div>
           <div class="stats">
             <div class="stat">
-              <a href="index.html" class="nav-link">
+              <a href="index.html" class="stat-link">
                 <span class="stat-count" id="post-count">{{ post_count }}</span> posts
               </a>
             </div>
             <div class="stat">
-              <a href="stories.html" class="nav-link active">
-                <span class="stat-count" id="story-count">{{ story_count }}</span> stories
-              </a>
+              <span class="stat-count" id="story-count">{{ story_count }}</span> stories
             </div>
             {% if profile.follower_count is defined and profile.follower_count is not none %}
             <div class="stat">
@@ -136,18 +160,49 @@
             </div>
             {% endif %}
           </div>
+          <div class="profile-bio-section">
+            <div class="profile-real-name">{{ name }}</div>
+            {% if bio %}
+            <p class="bio">{{ bio }}</p>
+            {% endif %}
+            {% if profile.website %}
+            <p class="website"><a href="{{ profile.website }}" target="_blank" rel="noopener noreferrer">🔗 {{ profile.website }}</a></p>
+            {% endif %}
+          </div>
         </div>
       </div>
+
+      <nav class="profile-tabs">
+        <a href="index.html" class="tab-item">
+          <svg aria-label="Posts" class="tab-icon" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12">
+            <rect fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="18" x="3" y="3"></rect>
+            <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="9.015" x2="9.015" y1="3" y2="21"></line>
+            <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="14.985" x2="14.985" y1="3" y2="21"></line>
+            <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="21" x2="3" y1="9.015" y2="9.015"></line>
+            <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="21" x2="3" y1="14.985" y2="14.985"></line>
+          </svg>
+          <span>POSTS</span>
+        </a>
+        <a href="stories.html" class="tab-item active">
+          <svg aria-label="Stories" class="tab-icon" fill="none" stroke="currentColor" stroke-width="2" height="12" role="img" viewBox="0 0 24 24" width="12">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polygon fill="currentColor" points="10 8 16 12 10 16"></polygon>
+          </svg>
+          <span>STORIES</span>
+        </a>
+      </nav>
       
       <div class="stories-container">
-        <h2 class="section-title">Stories</h2>
+        <div class="section-header">
+          <h2 class="section-title">All Stories ({{ story_count }})</h2>
+        </div>
         <div class="stories-grid">
           {% for story in stories %}
           <div class="story-item" data-index="{{ story.index }}" data-timestamp="{{ story.timestamp }}">
             <div class="story-media">
               {% if story.is_video %}
               <div class="video-indicator">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
                   <path d="M8 5v14l11-7z" fill="white"/>
                 </svg>
               </div>
@@ -189,7 +244,7 @@
     
     <footer>
       <div class="footer-content">
-        <p>Generated on {{ generation_date }} with <a href="https://github.com/greg-randall/memento-mori">Memento Mori</a>.</p>
+        <p>Gavin Spear's Instagram Archive</p>
       </div>
     </footer>
   </body>

@@ -82,36 +82,75 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 break;
 
+            case 'most-media':
+                // Sort by media count (most photos/videos first)
+                gridItems.sort((a, b) => {
+                    const countA = parseInt(a.getAttribute('data-media-count')) || 1;
+                    const countB = parseInt(b.getAttribute('data-media-count')) || 1;
+                    if (countB !== countA) return countB - countA;
+                    const indexA = parseInt(a.getAttribute('data-index'));
+                    const indexB = parseInt(b.getAttribute('data-index'));
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
+                });
+                break;
+
+            case 'videos-only':
+                // Show video posts first
+                gridItems.sort((a, b) => {
+                    const isVideoA = a.getAttribute('data-is-video') === 'true' ? 1 : 0;
+                    const isVideoB = b.getAttribute('data-is-video') === 'true' ? 1 : 0;
+                    if (isVideoB !== isVideoA) return isVideoB - isVideoA;
+                    const indexA = parseInt(a.getAttribute('data-index'));
+                    const indexB = parseInt(b.getAttribute('data-index'));
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
+                });
+                break;
+
+            case 'photos-only':
+                // Show photo posts first
+                gridItems.sort((a, b) => {
+                    const isPhotoA = a.getAttribute('data-is-video') !== 'true' ? 1 : 0;
+                    const isPhotoB = b.getAttribute('data-is-video') !== 'true' ? 1 : 0;
+                    if (isPhotoB !== isPhotoA) return isPhotoB - isPhotoA;
+                    const indexA = parseInt(a.getAttribute('data-index'));
+                    const indexB = parseInt(b.getAttribute('data-index'));
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
+                });
+                break;
+
             case 'most-likes':
-                // Sort by number of likes
+                // Sort by number of likes (with timestamp tie-breaker)
                 gridItems.sort((a, b) => {
                     const indexA = parseInt(a.getAttribute('data-index'));
                     const indexB = parseInt(b.getAttribute('data-index'));
                     const likesA = getLikesByIndex(indexA) || 0;
                     const likesB = getLikesByIndex(indexB) || 0;
-                    return likesB - likesA;
+                    if (likesB !== likesA) return likesB - likesA;
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
                 });
                 break;
 
             case 'most-comments':
-                // Sort by number of comments
+                // Sort by number of comments (with timestamp tie-breaker)
                 gridItems.sort((a, b) => {
                     const indexA = parseInt(a.getAttribute('data-index'));
                     const indexB = parseInt(b.getAttribute('data-index'));
                     const commentsA = getCommentsByIndex(indexA) || 0;
                     const commentsB = getCommentsByIndex(indexB) || 0;
-                    return commentsB - commentsA;
+                    if (commentsB !== commentsA) return commentsB - commentsA;
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
                 });
                 break;
 
             case 'most-views':
-                // Sort by number of views/impressions
+                // Sort by number of views/impressions (with timestamp tie-breaker)
                 gridItems.sort((a, b) => {
                     const indexA = parseInt(a.getAttribute('data-index'));
                     const indexB = parseInt(b.getAttribute('data-index'));
                     const viewsA = getViewsByIndex(indexA) || 0;
                     const viewsB = getViewsByIndex(indexB) || 0;
-                    return viewsB - viewsA;
+                    if (viewsB !== viewsA) return viewsB - viewsA;
+                    return getTimestampByIndex(indexB) - getTimestampByIndex(indexA);
                 });
                 break;
 
@@ -391,42 +430,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
         postMedia.appendChild(mediaContainer);
 
-        // Set post caption
+        // Set post caption with hashtags and mentions styled
+        const captionRow = document.querySelector('.post-caption-row');
         if (post.tt) {
-            postCaption.innerHTML = post.tt.replace(/\n/g, '<br>');
+            let escaped = post.tt
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            escaped = escaped.replace(/(^|\s)@([a-zA-Z0-9_.]+)/g, '$1<span class="ig-mention">@$2</span>');
+            escaped = escaped.replace(/(^|\s)#([a-zA-Z0-9_]+)/g, '$1<span class="ig-hashtag">#$2</span>');
+            postCaption.innerHTML = escaped.replace(/\n/g, '<br>');
+            if (captionRow) captionRow.style.display = 'flex';
         } else {
             postCaption.innerHTML = '';
+            if (captionRow) captionRow.style.display = 'none';
         }
 
         // Set post stats
-        if (post.im) {
-            const impressionsDiv = document.createElement('div');
-            impressionsDiv.className = 'post-stat';
-            impressionsDiv.innerHTML = `
-                <span class="post-stat-icon">👁️</span>
-                <span>${post.im} views</span>
-            `;
-            postStats.appendChild(impressionsDiv);
-        }
-
         if (post.l) {
             const likesDiv = document.createElement('div');
             likesDiv.className = 'post-stat';
-            likesDiv.innerHTML = `
-                <span class="post-stat-icon">♥</span>
-                <span>${post.l}</span>
-            `;
+            likesDiv.innerHTML = `<strong>${post.l}</strong> likes`;
             postStats.appendChild(likesDiv);
         }
 
         if (post.c) {
             const commentsDiv = document.createElement('div');
             commentsDiv.className = 'post-stat';
-            commentsDiv.innerHTML = `
-                <span class="post-stat-icon">💬</span>
-                <span>${post.c} comments</span>
-            `;
+            commentsDiv.innerHTML = `<strong>${post.c}</strong> comments`;
             postStats.appendChild(commentsDiv);
+        }
+
+        if (post.im) {
+            const impressionsDiv = document.createElement('div');
+            impressionsDiv.className = 'post-stat';
+            impressionsDiv.innerHTML = `<strong>${post.im}</strong> views`;
+            postStats.appendChild(impressionsDiv);
         }
 
         // Set post date

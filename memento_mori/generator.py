@@ -147,9 +147,17 @@ class InstagramSiteGenerator:
         # Get stories data or empty dict if not available
         stories_data = self.data_package.get("stories", {})
 
+        # Determine if metrics exist in posts data
+        posts_dict = self.data_package.get("posts", {})
+        has_likes = any(bool(p.get("l")) for p in posts_dict.values())
+        has_comments = any(bool(p.get("c")) for p in posts_dict.values())
+        has_views = any(bool(p.get("im")) for p in posts_dict.values())
+        name = profile_info.get("name") or "Gavin Spear"
+
         # Render the main template
         template = self.jinja_env.get_template("index.html")
         html_content = template.render(
+            name=name,
             username=profile_info["username"],
             profile_picture=profile_picture,
             bio=profile_info.get("bio", ""),  # Pass bio to template
@@ -158,6 +166,9 @@ class InstagramSiteGenerator:
             post_count=post_count,
             story_count=story_count,
             has_stories=story_count > 0,  # Flag to show stories link
+            has_likes=has_likes,
+            has_comments=has_comments,
+            has_views=has_views,
             grid_html=grid_html,
             post_data_json=json.dumps(self.data_package["posts"], ensure_ascii=False),
             stories_data_json=json.dumps(stories_data, ensure_ascii=False),  # Add stories data
@@ -194,6 +205,8 @@ class InstagramSiteGenerator:
                     "is_video": display_media["is_video"],
                     "media_count": len(post["m"]),
                     "likes": post.get("l", ""),
+                    "comments": post.get("c", ""),
+                    "date": post.get("d", ""),
                     "lazy_load": Markup(' loading="lazy"') if i >= lazy_after else "",
                 }
             )
@@ -330,9 +343,12 @@ class InstagramSiteGenerator:
                 "original_media": story["m"][0] if story["m"] else "",  # Include original media path
             })
         
+        name = profile_info.get("name") or "Gavin Spear"
+        
         # Render the stories template
         template = self.jinja_env.get_template("stories_page.html")
         html_content = template.render(
+            name=name,
             username=profile_info["username"],
             profile_picture=profile_picture,
             bio=profile_info.get("bio", ""),

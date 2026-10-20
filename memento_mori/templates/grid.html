@@ -1,13 +1,41 @@
 {% for post in posts %}
-<div class="grid-item" data-index="{{ post.index }}">
-  <img src="{{ post.display_media }}" alt="Instagram post"{{ post.lazy_load }}>
+<div class="grid-item" data-index="{{ post.index }}" data-media-count="{{ post.media_count }}" data-is-video="{{ 'true' if post.is_video else 'false' }}">
+  <div class="grid-item-media">
+    <img src="{{ post.display_media }}" alt="Instagram post"{{ post.lazy_load }}>
+  </div>
   {% if post.is_video %}
-  <div class="video-indicator">▶ Video</div>
+  <div class="media-type-badge video-badge" title="Video">
+    <svg aria-label="Video" fill="currentColor" height="18" role="img" viewBox="0 0 24 24" width="18">
+      <path d="M5.888 22.5a3.46 3.46 0 0 1-1.721-.46l-.003-.002a3.451 3.451 0 0 1-1.72-2.982V4.943a3.45 3.45 0 0 1 5.163-2.987l12.226 7.029a3.45 3.45 0 0 1 0 5.972l-12.223 7.029a3.435 3.435 0 0 1-1.722.514z"></path>
+    </svg>
+  </div>
+  {% elif post.media_count > 1 %}
+  <div class="media-type-badge carousel-badge" title="{{ post.media_count }} items">
+    <svg aria-label="Carousel" fill="currentColor" height="18" role="img" viewBox="0 0 48 48" width="18">
+      <path d="M34.8 29.7V8.3c0-2.9-2.4-5.3-5.3-5.3H8.1C5.2 3 2.8 5.4 2.8 8.3v21.4c0 2.9 2.4 5.3 5.3 5.3h21.4c2.9 0 5.3-2.4 5.3-5.3zm-5.3-23.7c1.3 0 2.3 1 2.3 2.3v21.4c0 1.3-1 2.3-2.3 2.3H8.1c-1.3 0-2.3-1-2.3-2.3V8.3c0-1.3 1-2.3 2.3-2.3h21.4zm10.7 7.7c-.8 0-1.5.7-1.5 1.5v22.8c0 1.3-1 2.3-2.3 2.3H13.6c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h22.8c2.9 0 5.3-2.4 5.3-5.3V15.2c0-.8-.7-1.5-1.5-1.5z"></path>
+    </svg>
+  </div>
   {% endif %}
-  {% if post.media_count > 1 %}
-  <div class="multi-indicator">⊞ {{ post.media_count }}</div>
-  {% elif post.likes %}
-  <div class="likes-indicator">♥ {{ post.likes }}</div>
-  {% endif %}
+  <div class="grid-item-overlay">
+    <div class="grid-overlay-content">
+      {% if post.likes %}
+      <div class="overlay-stat">
+        <svg fill="currentColor" height="18" viewBox="0 0 24 24" width="18"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>{{ post.likes }}</span>
+      </div>
+      {% endif %}
+      {% if post.comments %}
+      <div class="overlay-stat">
+        <svg fill="currentColor" height="18" viewBox="0 0 24 24" width="18"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>
+        <span>{{ post.comments }}</span>
+      </div>
+      {% endif %}
+      {% if not post.likes and not post.comments and post.media_count > 1 %}
+      <div class="overlay-stat">
+        <span>{{ post.media_count }} items</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endfor %}
