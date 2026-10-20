@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+memento_mori/__init__.py
+memento_mori/cli.py
+memento_mori/extractor.py
+memento_mori/file_mapper.py
+memento_mori/generator.py
+memento_mori/loader.py
+memento_mori/media.py
+memento_mori.egg-info/PKG-INFO
+memento_mori.egg-info/SOURCES.txt
+memento_mori.egg-info/dependency_links.txt
+memento_mori.egg-info/entry_points.txt
+memento_mori.egg-info/requires.txt
+memento_mori.egg-info/top_level.txt

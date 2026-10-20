@@ -1,0 +1,2 @@
+[console_scripts]
+memento-mori = memento_mori.cli:main
