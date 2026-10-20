@@ -16,9 +16,11 @@
       gtag('config', '{{ gtag_id }}');
     </script>
     {% endif %}
-    <!-- Script to make stories data available to JavaScript -->
+    <!-- Data script tags -->
+    <script id="memento-stories-data" type="application/json">{{ stories_data_json|safe }}</script>
     <script>
-        window.storiesData = {{ stories_data_json|safe }};
+      var storiesDataEl = document.getElementById('memento-stories-data');
+      window.storiesData = storiesDataEl ? JSON.parse(storiesDataEl.textContent || '{}') : {};
     </script>
     <script src="js/stories.js"></script>
     <style>

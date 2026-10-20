@@ -11,6 +11,8 @@ instagram*/
 
 # Virtual Environments
 venv/
+.venv/
+
 
 # Python bytecode
 __pycache__/
@@ -19,6 +21,7 @@ __pycache__/
 *.so
 .Python
 *.cpython-*
+*.egg-info/
 
 # System Files
 .DS_Store
