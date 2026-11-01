@@ -2,6 +2,7 @@
 
 import argparse
 import multiprocessing
+import os
 from pathlib import Path
 import traceback
 import sys
@@ -15,9 +16,38 @@ from memento_mori.generator import InstagramSiteGenerator
 def main():
     """Main entry point for the Memento Mori CLI."""
     parser = argparse.ArgumentParser(
-        description="Transform Instagram data export into a viewer."
+        description="Transform Instagram data export into a viewer and digital signage web app."
     )
 
+    parser.add_argument(
+        "action",
+        nargs="?",
+        default="build",
+        choices=["build", "serve", "server"],
+        help="Action to perform: 'build' to generate static viewer, 'serve' to run the Web App [default: build]",
+    )
+    parser.add_argument(
+        "--serve",
+        action="store_true",
+        help="Launch the Web App & Digital Signage server",
+    )
+    parser.add_argument(
+        "--port", "-p",
+        type=int,
+        default=int(os.environ.get("PORT", 8080)),
+        help="Port for the web app server [default: 8080]",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=os.environ.get("HOST", "0.0.0.0"),
+        help="Host for the web app server [default: 0.0.0.0]",
+    )
+    parser.add_argument(
+        "--auto-build",
+        action="store_true",
+        help="Auto-build website if output directory is empty when running serve",
+    )
     parser.add_argument(
         "--input",
         type=str,
@@ -76,6 +106,18 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Handle serve command or --serve flag to launch the Web App
+    if args.serve or args.action in ["serve", "server"]:
+        from memento_mori.server import run_server
+        run_server(
+            host=args.host,
+            port=args.port,
+            output_dir=args.output,
+            workspace_dir=args.search_dir,
+            auto_build=args.auto_build,
+        )
+        return 0
 
     # Set defaults for threads if not specified
     if args.threads <= 0:

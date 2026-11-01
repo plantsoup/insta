@@ -25,8 +25,11 @@ COPY . .
 # Create directories for input/output
 RUN mkdir -p /input /output
 
+# Expose Web App & Digital Signage port
+EXPOSE 8080
+
 # Set the entrypoint
 ENTRYPOINT ["python", "-m", "memento_mori.cli"]
 
-# Default command if none provided
-CMD ["--help"]
+# Default command starts the web application server
+CMD ["serve", "--port", "8080", "--host", "0.0.0.0", "--auto-build"]

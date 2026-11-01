@@ -88,6 +88,34 @@ header.ig-header {
   color: var(--ig-primary-text);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.signage-launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(0, 149, 246, 0.22), rgba(188, 24, 136, 0.22));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 13px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.signage-launch-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 149, 246, 0.4), rgba(188, 24, 136, 0.4));
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
 .date-range-header {
   display: flex;
   align-items: center;
@@ -178,6 +206,7 @@ main {
   background-color: #121212;
   border: 3px solid #000000;
   display: block;
+  overflow: hidden;
 }
 
 /* Profile Details */

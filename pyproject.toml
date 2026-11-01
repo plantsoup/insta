@@ -24,6 +24,7 @@ packages = ["memento_mori"]
 
 [project.scripts]
 memento-mori = "memento_mori.cli:main"
+memento-mori-server = "memento_mori.server:main"
 
 [project.urls]
 "Homepage" = "https://github.com/plantsoup/insta"

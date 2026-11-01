@@ -241,6 +241,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update modal content
         updateModalContent(post, imageIndex);
 
+        // Update Signage Link
+        const modalSignageLink = document.getElementById('modalSignageLink');
+        if (modalSignageLink && timestamp) {
+            modalSignageLink.href = `signage.html?post=${timestamp}`;
+        }
+
         // Update URL with post ID and image index
         updateUrlWithPostInfo(timestamp, imageIndex);
 

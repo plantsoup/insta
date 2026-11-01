@@ -1,0 +1,894 @@
+/* ==========================================================================
+   Memento Mori - Digital Signage Stylesheet
+   Designed for Portrait & Landscape Digital Signage Displays / Monitors / TVs
+   ========================================================================== */
+
+:root {
+  --ds-bg: #000000;
+  --ds-text: #ffffff;
+  --ds-text-muted: rgba(255, 255, 255, 0.72);
+  --ds-text-dim: rgba(255, 255, 255, 0.48);
+  --ds-glass-bg: rgba(18, 18, 18, 0.78);
+  --ds-glass-border: rgba(255, 255, 255, 0.12);
+  --ds-glass-active: rgba(255, 255, 255, 0.22);
+  --ds-accent: #0095f6;
+  --ds-accent-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  --ds-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ds-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  --ds-transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--ds-bg);
+  color: var(--ds-text);
+  font-family: var(--ds-font);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body.idle-cursor {
+  cursor: none !important;
+}
+
+/* ==========================================================================
+   Full Viewport Signage Root
+   ========================================================================== */
+
+.signage-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dynamic Ambient Blurred Backdrop */
+.signage-ambient-bg {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  z-index: 1;
+  background-size: cover;
+  background-position: center;
+  filter: blur(55px) brightness(0.38) saturate(1.35);
+  transform: scale(1.1);
+  transition: background-image 0.9s ease, opacity 0.8s ease;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.signage-ambient-bg.disabled {
+  opacity: 0;
+}
+
+.signage-ambient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.75) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Stage Container */
+.signage-stage {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* ==========================================================================
+   Slide Elements & Ken Burns Animation
+   ========================================================================== */
+
+.signage-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 6;
+}
+
+.signage-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 7;
+}
+
+/* Media Wrapper */
+.signage-media-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.signage-media {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: var(--ds-shadow);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Ken Burns Subtle Cinematic Motions for Images */
+.kenburns-active .signage-media.is-photo {
+  animation: kenburns-pan-zoom 12s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes kenburns-pan-zoom {
+  0% {
+    transform: scale(1.0) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate(-1.2%, -1%);
+  }
+}
+
+.kenburns-active .signage-media.is-photo.alt-motion {
+  animation: kenburns-pan-zoom-alt 12s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes kenburns-pan-zoom-alt {
+  0% {
+    transform: scale(1.08) translate(1%, 1%);
+  }
+  100% {
+    transform: scale(1.0) translate(0, 0);
+  }
+}
+
+/* Video specific styling */
+video.signage-media {
+  background: #000;
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   Orientation Layouts: LANDSCAPE vs PORTRAIT
+   ========================================================================== */
+
+/* ----------------------------------------------------
+   1. LANDSCAPE MODE (16:9 / horizontal monitors, TVs)
+   ---------------------------------------------------- */
+.signage-container.layout-landscape {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+/* When landscape media is shown on landscape screen */
+.signage-container.layout-landscape .content-layout-wide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.signage-container.layout-landscape .content-layout-wide .signage-media-box {
+  width: 100%;
+  height: 100%;
+  padding: 40px 60px;
+}
+
+.signage-container.layout-landscape .content-layout-wide .signage-media {
+  border-radius: 12px;
+}
+
+/* Overlay Card for Wide Content */
+.signage-container.layout-landscape .content-layout-wide .signage-info-overlay {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  right: 60px;
+  max-width: 720px;
+  background: linear-gradient(135deg, rgba(16, 16, 16, 0.88), rgba(24, 24, 24, 0.72));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--ds-glass-border);
+  border-radius: 18px;
+  padding: 20px 26px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  transition: opacity var(--ds-transition), transform var(--ds-transition);
+}
+
+/* When portrait media (Stories or 4:5 photos) is displayed on a landscape screen */
+/* SPLIT SCREEN / DUAL PANEL LAYOUT */
+.signage-container.layout-landscape .content-layout-tall {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 80px;
+  gap: 60px;
+}
+
+.signage-container.layout-landscape .content-layout-tall .signage-media-box {
+  flex: 1.1;
+  height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signage-container.layout-landscape .content-layout-tall .signage-media {
+  height: 100%;
+  width: auto;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+}
+
+.signage-container.layout-landscape .content-layout-tall .signage-info-sidebar {
+  flex: 0.9;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(145deg, rgba(20, 20, 20, 0.88), rgba(30, 30, 30, 0.75));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--ds-glass-border);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+/* ----------------------------------------------------
+   2. PORTRAIT MODE (9:16 vertical monitors, kiosks)
+   ---------------------------------------------------- */
+.signage-container.layout-portrait {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 24px 40px;
+}
+
+.signage-container.layout-portrait .signage-slide {
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 24px 36px;
+}
+
+.signage-container.layout-portrait .signage-media-box {
+  flex: 1;
+  width: 100%;
+  max-height: calc(100vh - 280px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+}
+
+.signage-container.layout-portrait .signage-media {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  border-radius: 20px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.85);
+}
+
+/* Tall media in portrait fills gracefully */
+.signage-container.layout-portrait .content-layout-tall .signage-media {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Typographic Card in Portrait Layout */
+.signage-container.layout-portrait .signage-info-card {
+  width: 100%;
+  max-width: 760px;
+  background: linear-gradient(145deg, rgba(18, 18, 18, 0.9), rgba(28, 28, 28, 0.8));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--ds-glass-border);
+  border-radius: 24px;
+  padding: 26px 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  margin-top: 20px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Typographic Metadata & Info Elements
+   ========================================================================== */
+
+.signage-author-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.signage-author-avatar-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--ds-accent-gradient);
+  padding: 2px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signage-author-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #000;
+}
+
+.signage-author-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.signage-author-name {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: #fff;
+}
+
+.signage-author-sub {
+  font-size: 14px;
+  color: var(--ds-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.signage-badge.badge-story {
+  background: linear-gradient(45deg, rgba(240, 148, 51, 0.3), rgba(188, 24, 136, 0.3));
+  border: 1px solid rgba(220, 39, 67, 0.5);
+  color: #ff9cc8;
+}
+
+.signage-badge.badge-video {
+  background: rgba(0, 149, 246, 0.25);
+  border: 1px solid rgba(0, 149, 246, 0.5);
+  color: #79c5ff;
+}
+
+.signage-badge.badge-carousel {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.signage-caption {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ds-text);
+  margin-bottom: 16px;
+  max-height: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.layout-portrait .signage-caption {
+  font-size: 20px;
+  max-height: 140px;
+  -webkit-line-clamp: 4;
+}
+
+.signage-metrics-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 15px;
+  color: var(--ds-text-muted);
+  font-weight: 500;
+}
+
+.signage-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.signage-metric svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.signage-date {
+  font-size: 14px;
+  color: var(--ds-text-dim);
+  margin-left: auto;
+}
+
+/* Minimal mode overrides */
+.info-mode-minimal .signage-caption,
+.info-mode-minimal .signage-metrics-row {
+  display: none !important;
+}
+
+.info-mode-minimal .signage-info-overlay,
+.info-mode-minimal .signage-info-card,
+.info-mode-minimal .signage-info-sidebar {
+  padding: 12px 20px !important;
+  max-width: 480px !important;
+}
+
+.info-mode-minimal .signage-author-row {
+  margin-bottom: 0 !important;
+}
+
+/* Off mode */
+.info-mode-off .signage-info-overlay,
+.info-mode-off .signage-info-card,
+.info-mode-off .signage-info-sidebar {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Persistent Top Header (Clock, Brand, Progress)
+   ========================================================================== */
+
+.signage-top-bar {
+  position: absolute;
+  top: 24px;
+  left: 36px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.signage-brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(14, 14, 14, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--ds-glass-border);
+  padding: 8px 16px;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.signage-clock-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(14, 14, 14, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--ds-glass-border);
+  padding: 8px 18px;
+  border-radius: 18px;
+}
+
+.signage-clock-time {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.signage-clock-date {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ds-text-muted);
+}
+
+/* Slide Progress Timeline */
+.signage-progress-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 30;
+}
+
+.signage-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--ds-accent-gradient);
+  transition: width 0.1s linear;
+}
+
+/* Carousel mini dot indicators on slide */
+.signage-carousel-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 4px 10px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.signage-carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+}
+
+.signage-carousel-dot.active {
+  background: #ffffff;
+  width: 14px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Bottom Glassmorphic Control HUD (Auto-Hiding)
+   ========================================================================== */
+
+.signage-hud {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 18, 18, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--ds-glass-border);
+  padding: 8px 14px;
+  border-radius: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+  z-index: 40;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  user-select: none;
+}
+
+.signage-hud.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  pointer-events: none;
+}
+
+.hud-btn {
+  background: transparent;
+  border: none;
+  color: var(--ds-text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+.hud-btn:hover {
+  background-color: var(--ds-glass-active);
+  transform: scale(1.08);
+}
+
+.hud-btn:active {
+  transform: scale(0.96);
+}
+
+.hud-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hud-btn.active {
+  color: #3897f0;
+  background-color: rgba(56, 151, 240, 0.16);
+}
+
+.hud-divider {
+  width: 1px;
+  height: 22px;
+  background-color: var(--ds-glass-border);
+  margin: 0 2px;
+}
+
+.hud-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+  padding: 0 8px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Settings Popover / Drawer
+   ========================================================================== */
+
+.signage-settings-modal {
+  position: absolute;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 400px;
+  max-width: 90vw;
+  background: rgba(22, 22, 22, 0.94);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--ds-glass-border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.signage-settings-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ds-glass-border);
+}
+
+.settings-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-close-btn {
+  background: none;
+  border: none;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 18px;
+}
+
+.settings-close-btn:hover {
+  color: #fff;
+}
+
+.settings-section {
+  margin-bottom: 16px;
+}
+
+.settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.settings-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--ds-text-dim);
+  margin-bottom: 8px;
+}
+
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.segment-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--ds-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 6px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.segment-btn.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.switch-label {
+  font-size: 14px;
+  color: var(--ds-text);
+  font-weight: 500;
+}
+
+/* Custom Checkbox Toggle */
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  transition: 0.3s;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .toggle-slider {
+  background-color: #0095f6;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Keyboard Shortcuts helper pill */
+.shortcuts-hint {
+  font-size: 11px;
+  color: var(--ds-text-dim);
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ds-glass-border);
+}
+
+/* ==========================================================================
+   Media Query Auto-Detection (Hardware Orientation)
+   ========================================================================== */
+
+/* Automatically apply portrait mode rules when viewport is portrait */
+@media (orientation: portrait) {
+  .signage-container.layout-auto {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px 36px;
+  }
+}
+
+@media (orientation: landscape) {
+  .signage-container.layout-auto {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+/* High-res 4K scaling support */
+@media (min-width: 2560px) {
+  .signage-author-name {
+    font-size: 28px;
+  }
+  .signage-caption {
+    font-size: 26px;
+  }
+  .signage-clock-time {
+    font-size: 32px;
+  }
+  .signage-clock-date {
+    font-size: 18px;
+  }
+  .signage-brand-pill {
+    font-size: 20px;
+    padding: 12px 24px;
+  }
+  .signage-badge {
+    font-size: 16px;
+    padding: 5px 14px;
+  }
+  .hud-btn {
+    width: 56px;
+    height: 56px;
+  }
+  .hud-btn svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+

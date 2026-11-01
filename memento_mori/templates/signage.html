@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Digital Signage • {{ name }} (@{{ username }}) • Instagram Archive</title>
+    <link rel="stylesheet" href="css/signage.css">
+    {% if gtag_id %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ gtag_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ gtag_id }}');
+    </script>
+    {% endif %}
+    <!-- Profile & Data bootstrap for Signage Engine -->
+    <script>
+      window.signageProfile = {
+        username: "{{ username }}",
+        name: "{{ name }}",
+        profile_picture: "{{ profile_picture }}",
+        date_range: "{{ date_range }}"
+      };
+      window.postData = {{ post_data_json|safe }};
+      {% if stories_data_json %}
+      window.storiesData = {{ stories_data_json|safe }};
+      {% else %}
+      window.storiesData = {};
+      {% endif %}
+    </script>
+    <script src="js/signage.js" defer></script>
+  </head>
+  <body>
+    <div class="signage-root" id="signageRoot">
+      <!-- Ambient Dynamic Blur Backdrop -->
+      <div class="signage-ambient-bg" id="ambientBg"></div>
+      <div class="signage-ambient-overlay"></div>
+
+      <!-- Top Progress Bar -->
+      <div class="signage-progress-container">
+        <div class="signage-progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Top Persistent Bar: Brand & Digital Clock -->
+      <header class="signage-top-bar" id="signageTopBar">
+        <div class="signage-brand-pill">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          <span>{{ name }} • Archive Signage</span>
+        </div>
+
+        <div class="signage-clock-widget" id="clockWidget">
+          <div class="signage-clock-time" id="clockTime">--:--</div>
+          <div class="signage-clock-date" id="clockDate">--- --, ----</div>
+        </div>
+      </header>
+
+      <!-- Main Stage Container (Orientation Responsive) -->
+      <main class="signage-container layout-auto" id="signageContainer">
+        <div class="signage-stage" id="signageStage">
+          <!-- Active slides are mounted dynamically by signage.js -->
+        </div>
+      </main>
+
+      <!-- Auto-Hiding Glassmorphic Control HUD -->
+      <nav class="signage-hud" id="signageHud" aria-label="Signage Controls">
+        <button class="hud-btn" id="hudPrevBtn" title="Previous Slide (Left Arrow)" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <button class="hud-btn" id="hudPlayBtn" title="Play / Pause (Space)" aria-label="Play/Pause">
+          <svg id="hudPauseIcon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+          <svg id="hudPlayIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+
+        <button class="hud-btn" id="hudNextBtn" title="Next Slide (Right Arrow)" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+        <span class="hud-counter" id="hudCounter">0 / 0</span>
+
+        <div class="hud-divider"></div>
+
+        <!-- Orientation Switcher (Auto, Landscape, Portrait) -->
+        <button class="hud-btn" id="hudOrientationBtn" title="Orientation (O)" aria-label="Orientation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </button>
+
+        <!-- Audio Mute / Unmute -->
+        <button class="hud-btn" id="hudMuteBtn" title="Toggle Sound (M)" aria-label="Mute/Unmute">
+          <svg id="volumeOffIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          <svg id="volumeOnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+
+        <!-- Settings Modal Toggle -->
+        <button class="hud-btn" id="hudSettingsBtn" title="Settings (S)" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+
+        <!-- Fullscreen Toggle -->
+        <button class="hud-btn" id="hudFullscreenBtn" title="Fullscreen (F)" aria-label="Fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+        </button>
+
+        <!-- Return to Archive -->
+        <button class="hud-btn" id="hudExitBtn" title="Exit Signage to Gallery (Esc)" aria-label="Exit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </nav>
+
+      <!-- Signage Settings Popover / Drawer -->
+      <div class="signage-settings-modal" id="settingsModal">
+        <div class="settings-header">
+          <div class="settings-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Signage Display Settings</span>
+          </div>
+          <button class="settings-close-btn" id="settingsCloseBtn" aria-label="Close">✕</button>
+        </div>
+
+        <!-- Monitor Orientation Mode -->
+        <div class="settings-section">
+          <div class="settings-label">Screen Orientation</div>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-setting="orientation" data-value="auto">Auto-Detect</button>
+            <button class="segment-btn" data-setting="orientation" data-value="landscape">Landscape (16:9)</button>
+            <button class="segment-btn" data-setting="orientation" data-value="portrait">Portrait (9:16)</button>
+          </div>
+        </div>
+
+        <!-- Slide Timing -->
+        <div class="settings-section">
+          <div class="settings-label">Slide Duration</div>
+          <div class="segmented-control">
+            <button class="segment-btn" data-setting="duration" data-value="5">5s</button>
+            <button class="segment-btn" data-setting="duration" data-value="8">8s</button>
+            <button class="segment-btn active" data-setting="duration" data-value="10">10s</button>
+            <button class="segment-btn" data-setting="duration" data-value="15">15s</button>
+            <button class="segment-btn" data-setting="duration" data-value="30">30s</button>
+          </div>
+        </div>
+
+        <!-- Content Filter -->
+        <div class="settings-section">
+          <div class="settings-label">Content Filter</div>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-setting="filter" data-value="all">All Content</button>
+            <button class="segment-btn" data-setting="filter" data-value="posts">Posts</button>
+            <button class="segment-btn" data-setting="filter" data-value="stories">Stories</button>
+            <button class="segment-btn" data-setting="filter" data-value="photos">Photos</button>
+            <button class="segment-btn" data-setting="filter" data-value="videos">Videos</button>
+          </div>
+        </div>
+
+        <!-- Play Order -->
+        <div class="settings-section">
+          <div class="settings-label">Play Order</div>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-setting="order" data-value="shuffle">Shuffle / Random</button>
+            <button class="segment-btn" data-setting="order" data-value="newest">Newest First</button>
+            <button class="segment-btn" data-setting="order" data-value="oldest">Oldest First</button>
+          </div>
+        </div>
+
+        <!-- Information Overlay Mode -->
+        <div class="settings-section">
+          <div class="settings-label">Metadata & Info</div>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-setting="infoMode" data-value="full">Full Info</button>
+            <button class="segment-btn" data-setting="infoMode" data-value="minimal">Minimal</button>
+            <button class="segment-btn" data-setting="infoMode" data-value="off">Off (Clean)</button>
+          </div>
+        </div>
+
+        <!-- Feature Toggles -->
+        <div class="settings-section">
+          <div class="switch-row">
+            <span class="switch-label">Cinematic Ken Burns Effect</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleKenBurns" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <span class="switch-label">Dynamic Ambient Lighting</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleAmbientBg" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <span class="switch-label">Digital Clock Widget</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleClock" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <span class="switch-label">Mute Video Audio</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleMuted" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="shortcuts-hint">
+          Shortcuts: <strong>Space</strong> Pause • <strong>Arrows</strong> Prev/Next • <strong>F</strong> Fullscreen • <strong>O</strong> Orientation • <strong>M</strong> Mute
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

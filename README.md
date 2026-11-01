@@ -7,11 +7,24 @@
 If you find a bug that you're able to fix please create a pull request, otherwise [create an issue with helpful info](#troubleshooting--reporting-issues).
 
 ## Quick Start
-Get your Instagram data export as a JSON-format zip, place it in this directory, and run:
+
+### 1. Run as a Web App (Recommended)
+Place your Instagram JSON-format ZIP export into this project folder and run:
 ```bash
-docker compose run --rm memento-mori
+docker compose up
 ```
-Then open `output/index.html` in your browser.
+Open **[http://localhost:8080](http://localhost:8080)** in your browser:
+- **Archive Viewer**: Browse posts and stories in the dark-mode Instagram interface.
+- **Digital Signage Mode**: Visit **[http://localhost:8080/signage](http://localhost:8080/signage)** or click the **Digital Signage** button in the header.
+
+### 2. Run with Python CLI / Server directly
+```bash
+# Start the web app server with Digital Signage
+python -m memento_mori.server --port 8080
+
+# Or build static HTML files only
+python -m memento_mori.cli
+```
 
 ## ⚠️ IMPORTANT SECURITY WARNING ⚠️
 
@@ -29,12 +42,21 @@ Only share the generated `output/` folder after processing with this tool.
 Memento Mori processes your Instagram data export and generates a fast, standalone static website with your posts and stories, converting media into optimized formats and organizing everything into a structure that can be viewed offline or hosted on any web server.
 
 ## Key Features
+- **Interactive Web App**: Run as a self-hosted web server with instant viewing, web-based setup wizard, and media streaming
+- **Portrait & Landscape Digital Signage**: Purpose-built kiosk mode for wall-mounted vertical displays (9:16) and landscape TVs/monitors (16:9)
+  - **Dynamic Ambient Lighting**: Soft blurred backdrop fills letterboxing without harsh black bars
+  - **Cinematic Ken Burns Effect**: Subtle zoom and pan motion on photos for a living digital frame feel
+  - **Seamless Video Looping**: Videos play with optional sound and auto-advance when completed
+  - **Smart Orientation Engine**: Auto-detects screen ratio, or force Portrait / Landscape mode
+  - **Kiosk Stealth Mode**: Cursor and controls auto-hide after 3 seconds of inactivity
+  - **Screen Wake Lock**: Automatically prevents monitor or display from sleeping
+  - **Live Clock & Date Widget**: Clean, readable typography ideal for home, office, or event displays
 - **Familiar Interface**: Grid layout with dark mode aesthetic, post detail modal, and swipeable carousel for multi-media posts
 - **Stories Support**: View your Instagram Stories with auto-progression, indicators, and 9:16 aspect ratio display
 - **Media Optimization**: Automatically converts images to WebP, extracts video frame thumbnails, and preserves playback
 - **Sorting & Filtering**: Sort posts by newest, oldest, multi-photo, videos only, photos only, random, or engagement metrics (likes, comments, views)
 - **Profile Information**: Displays bio, links, and follower count from your Instagram export
-- **Standalone Static Output**: Zero backend required for serving—host on GitHub Pages, Cloudflare Pages, S3, Traefik, or browse locally
+- **Standalone Static Output**: Zero backend required for static serving—host on GitHub Pages, Cloudflare Pages, S3, Traefik, or browse locally
 - **Parallel Processing**: Multi-threaded media conversion with configurable quality and resolution limits
 
 ## How to Use Memento Mori
@@ -126,9 +148,44 @@ python -m memento_mori.cli --verbose
 ```
 
 ## Viewing Your Generated Site
-1. Once processing finishes, open `output/index.html` in your web browser.
-2. Click on the profile photo or "Stories" tab to launch the interactive Stories viewer.
-3. You can upload the entire `output/` directory to any static hosting provider (e.g., Cloudflare Pages, Netlify, GitHub Pages, Nginx, Traefik).
+1. **Web App**: Run `docker compose up` and visit `http://localhost:8080` (or `http://localhost:8080/signage`).
+2. **Static Browsing**: Open `output/index.html` or `output/signage.html` directly in your web browser.
+3. Click on the profile photo or "Stories" tab to launch the interactive Stories viewer.
+4. Click the **Digital Signage** button in the header or the **SIGNAGE** tab to start unattended presentation mode.
+5. You can upload the entire `output/` directory to any static hosting provider (e.g., Cloudflare Pages, Netlify, GitHub Pages, Nginx, Traefik).
+
+## 🖥️ Digital Signage Mode
+
+Digital Signage transforms any display into a living, ambient photo frame or kiosk:
+
+- **Portrait Monitors (9:16)**: Perfectly scaled for vertical monitors, kiosks, or rotated screens with vertical media showcase and typographic metadata cards.
+- **Landscape Displays (16:9 / TVs)**: Full bleed landscape media, or dual-panel split screen showcasing portrait media alongside caption cards and ambient lighting.
+- **Auto-Hiding Controls**: Mouse cursor and control HUD fade away after 3 seconds of inactivity.
+- **Display Wake Lock**: Prevents monitors, tablets, and smart TVs from turning off or going into screensaver mode.
+
+### Keyboard Shortcuts
+
+| Key | Action |
+| --- | --- |
+| `Space` | Pause / Resume playback |
+| `Right Arrow` / `L` | Next slide / carousel item |
+| `Left Arrow` / `J` | Previous slide |
+| `F` | Toggle Fullscreen |
+| `O` | Switch orientation (Auto &rarr; Landscape &rarr; Portrait) |
+| `M` | Toggle video audio (Mute / Unmute) |
+| `K` | Toggle Ken Burns cinematic pan & zoom |
+| `I` | Cycle metadata overlay (Full &rarr; Minimal &rarr; Off) |
+| `S` | Open Settings drawer |
+| `Esc` | Return to gallery viewer |
+
+### Direct URL Parameters
+
+You can customize signage display via URL query parameters (ideal for kiosk auto-launch):
+- `http://localhost:8080/signage?orientation=portrait` (force portrait mode)
+- `http://localhost:8080/signage?orientation=landscape` (force landscape mode)
+- `http://localhost:8080/signage?filter=stories` (stories only)
+- `http://localhost:8080/signage?duration=15` (15 seconds per slide)
+- `http://localhost:8080/signage?order=shuffle` (randomized shuffle)
 
 ## Troubleshooting & Reporting Issues
 If you encounter an error:

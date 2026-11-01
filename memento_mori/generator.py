@@ -85,6 +85,9 @@ class InstagramSiteGenerator:
             if "stories" in self.data_package and self.data_package["stories"]:
                 self._generate_stories_html()
 
+            # Generate digital signage HTML
+            self._generate_signage_html()
+
             print(f"Website successfully generated at {self.output_dir}")
             return True
 
@@ -367,3 +370,36 @@ class InstagramSiteGenerator:
             f.write(html_content)
         
         print(f"Generated stories HTML file: {self.output_dir / 'stories.html'}")
+
+    def _generate_signage_html(self):
+        """Generate HTML for digital signage mode."""
+        try:
+            profile_info = self.data_package.get("profile", {})
+            date_range = self.data_package.get("date_range", {}).get("range", "")
+            stories_data = self.data_package.get("stories", {})
+            name = profile_info.get("name") or "Gavin Spear"
+
+            profile_picture = profile_info.get("profile_picture", "")
+            if profile_picture:
+                webp_path = re.sub(r"\.(jpg|jpeg|png|gif)$", ".webp", profile_picture, flags=re.I)
+                if os.path.exists(os.path.join(self.output_dir, webp_path)):
+                    profile_picture = webp_path
+
+            template = self.jinja_env.get_template("signage.html")
+            html_content = template.render(
+                name=name,
+                username=profile_info.get("username", "user"),
+                profile_picture=profile_picture,
+                date_range=date_range,
+                post_data_json=json.dumps(self.data_package.get("posts", {}), ensure_ascii=False),
+                stories_data_json=json.dumps(stories_data, ensure_ascii=False),
+                gtag_id=self.gtag_id,
+            )
+
+            with open(self.output_dir / "signage.html", "w", encoding="utf-8") as f:
+                f.write(html_content)
+
+            print(f"Generated signage HTML file: {self.output_dir / 'signage.html'}")
+        except Exception as e:
+            print(f"Error generating signage HTML: {str(e)}")
+
